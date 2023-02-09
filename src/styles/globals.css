@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.timer{
+  text-align: center;
+  background-color: #e9dde5;
+  color: #b228a6;
+  padding: 20px 0;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.timer-copy{
+  margin: unset;
+}
+
+
+.virtual-account{
+  display: flex;
+  gap: 2px;
+}
+
+.nav{
+  background-color: black;
+  width: 100%;
+  height: 100px;
+}
+
+.wrapper{
+  width: 70%;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.thanks{
+  text-align: center;
+  margin-top: 50px;
+}
+
+@media screen and (max-width:414px) {
+  .BANK_DANAMON{
+    width: 250px;
+    height: 100px;
+  }
+
+  .BANK_CIMB{
+    width: 250px;
+    height: 100px;
+  }
+
+  .BANK_BRI{
+    width: 200px;
+    height: 100px;
+  }
+
+  .BANK_MANDIRI{
+    width: 250px;
+    height: 100px;
+  }
+
+  .BANK_PERMATA{
+    width: 250px;
+    height: 100px;
+  }
+}

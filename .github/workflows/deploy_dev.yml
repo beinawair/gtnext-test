@@ -1,0 +1,143 @@
+name: CI Automatic Deployment for Development
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  unit-test:
+    name: Unit Test
+    uses: ./.github/workflows/unit_test.yml # use the callable tests job to run tests
+
+  deploy-development:
+    name: Deploy service to development server
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [16.17.0]
+        # typescript-version: [~4.7]
+        os: [ubuntu-latest]
+    needs: [unit-test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run command using ssh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          command_timeout: 30m
+          script: |
+            #!/bin/bash
+
+            set -e
+
+            # CONSTANTS
+            DATE=$(date +%Y-%m-%d)
+            WORKDIR=/home/ec2-user/services/sandbox-secure.gate-cash.com
+            ENV_DIR=env
+            SOURCE=source
+            GITHUB_URL=git@github-turnkey-devs.com:turnkey-devs/gtnext_payment_gateway.git
+            GITHUB_BRANCH=dev
+
+            # DIRECTORIES YOU WANT TO BACKUP
+            declare -A BACKUP_DIRS
+            BACKUP_DIRS=(
+              ["source/storage"]="source/storage"
+              ["source/server/storage"]="source/server/storage"
+            )
+
+            echo "Preparing working directory..."
+            mkdir -p $WORKDIR || true
+            cd $WORKDIR
+
+            if [ ! -d "$ENV_DIR" ]; then
+              echo "$ENV_DIR not exists! aborting! We will create it, please put the envs, then retry this action"
+              mkdir -p $ENV_DIR
+              exit 1
+            fi
+
+            echo "Backup..."
+            for key in "${!BACKUP_DIRS[@]}"; do
+              ARR_VAL=${BACKUP_DIRS[$key]//[[\],.!]}
+              TARGET_DIR=$ENV_DIR/bak_$DATE/$ARR_VAL
+              echo "Backing up $key to $TARGET_DIR."
+              if [ ! -d "$key" ]; then
+                echo "$key not exists! aborting ❌"
+              else
+                mkdir -p $TARGET_DIR
+                cp -TR ./$key ./$TARGET_DIR
+                BACKUP_DIRS[$key]=$TARGET_DIR
+                echo "Backing up $key to $TARGET_DIR => DONE ✅"
+              fi
+            done
+
+            echo "Cleaning old source..."
+            rm -rfd $SOURCE || true
+
+            echo "Preparing new source..."
+            git clone -b $GITHUB_BRANCH $GITHUB_URL $SOURCE
+
+            if [ ! -d "$SOURCE" ]; then
+              echo "$SOURCE not exists! aborting!"
+              exit 1
+            fi
+
+            echo "Preparing env variables..."
+            cd env
+            find . -type f -name "*env*" | cpio -updm ../$SOURCE/;
+            cd ..
+
+            echo "Preparing NVM..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            nvm install ${{ matrix.node-version }} || true
+            nvm use ${{ matrix.node-version }} || true
+            npm i -g pnpm || true
+
+            echo "Recover backup..."
+            for key in "${!BACKUP_DIRS[@]}"; do
+              ARR_VAL=${BACKUP_DIRS[$key]//[[\],.!]}
+              TARGET_DIR=$ARR_VAL
+              if [ ! -d "$TARGET_DIR" ]; then
+                echo "$TARGET_DIR not exists! aborting ❌"
+              else
+                cp -TR ./$TARGET_DIR ./$key
+                echo "Recovering $TARGET_DIR to $key => DONE ✅"
+              fi
+            done
+
+            echo "Move to $SOURCE..."
+            cd $SOURCE
+
+            # YOUR PROJECT SCRIPT BELLOW!
+
+            echo "Installing dependencies..."
+            pnpm install
+
+            # Deploy UI
+            pnpm run deploy # its must, because pnpm deploy is reserved
+
+            echo "Move to server..."
+            cd server
+
+            echo "CHMOD all *.sh..."
+            chmod u+x -R *.sh
+
+            pnpm install
+
+            # Run service
+            pnpm run build
+            ./cron.pm2.sh --cron GATE_CASH_SERVER_DEV
+
+
+            # QUIT
+            echo "Deploy CI done! exit..."
+            exit 0

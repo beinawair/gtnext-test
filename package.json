@@ -1,0 +1,81 @@
+{
+  "name": "gtnext_payment_gateway",
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@splidejs/react-splide": "^0.7.12",
+    "@turnkeyid/utils-ts": "^1.4.9",
+    "app-root-path": "^3.0.0",
+    "axios": "^0.27.2",
+    "bootstrap": "^5.2.2",
+    "dinero.js": "^1.9.1",
+    "moment-mini": "^2.24.0",
+    "nanoid": "^3.3.4",
+    "nanoid-dictionary": "^4.3.0",
+    "next": "^13.1.2",
+    "qs": "^6.11.0",
+    "react": "18.2.0",
+    "react-bootstrap": "^2.4.0",
+    "react-dom": "18.2.0",
+    "react-images-uploading": "^3.1.7",
+    "react-spinner-overlay": "^0.1.33",
+    "redux": "^4.2.0",
+    "sift": "^16.0.0",
+    "sweetalert2": "^11.4.26",
+    "sweetalert2-react-content": "^5.0.2",
+    "zustand": "^4.3.2"
+  },
+  "description": "",
+  "devDependencies": {
+    "@heroicons/react": "^2.0.13",
+    "@types/dinero.js": "^1.9.0",
+    "@types/nanoid-dictionary": "^4.2.0",
+    "@types/node": "^16.11.62",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "autoprefixer": "^10.4.13",
+    "eol-converter-cli": "^1.0.8",
+    "http-server": "^14.1.1",
+    "postcss": "^8.4.21",
+    "prettier": "^2.7.1",
+    "reflect-metadata": "^0.1.13",
+    "sass": "^1.52.3",
+    "serve": "^14.1.2",
+    "tailwindcss": "^3.2.6",
+    "ts-node": "^10.7.0",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "~4.7",
+    "vite": "^3.0.0",
+    "vite-plugin-solid": "^2.2.6",
+    "vite-tsconfig-paths": "^3.5.0",
+    "windicss-webpack-plugin": "^1.7.4",
+    "xo": "^0.52.3"
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "scripts": {
+    "build": "next build",
+    "build:serve": "pnpm run deploy && pnpm run serve",
+    "deploy": "pnpm run build && pnpm run export",
+    "dev": "next dev -p 5000",
+    "export": "next export -o dist",
+    "fresh-module": "(rm -rf node_modules package-lock.json yarn.lock || true) && pnpm i",
+    "lint": "next lint",
+    "postinstall": "sh ./postinstall.sh",
+    "serve": "http-server dist --cors -p 5000",
+    "start": "next build && next start -p 5000",
+    "test": "nyc ava"
+  },
+  "type": "commonjs",
+  "version": "0.1.0"
+}

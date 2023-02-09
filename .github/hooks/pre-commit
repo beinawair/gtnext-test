@@ -1,0 +1,82 @@
+#!/bin/sh
+echo "Pre-commit script running..."
+
+# !UNCOMMENT THIS AFTER CLONE FROM TEMPLATE!
+
+NPM_INSTALL="npm i -g pnpm && pnpm i"
+LINTER="npx xo \"./src/**/*.ts\" \"!**/*.spec.ts\" --fix --quiet"
+BUILDER="pnpm run build"
+SERVER_BUILDER="cd server && pnpm run build"
+TESTER="pnpm run test"
+FIX_EOL=${eolConverter:-"node_modules/.bin/eolConverter"}
+
+if [ ! -f "$FIX_EOL" ]; then
+	echo "FIX EOL NOT FOUND!"
+	exit 1
+fi
+
+echo "Installing npm..."
+eval $NPM_INSTALL
+
+linter_exit_code=1
+echo "linting..."
+eval $LINTER
+linter_exit_code=$?
+
+if [ $linter_exit_code -ne 0 ]; then
+	echo "❌ Linter errors have occurred 🤦‍♂️"
+	exit 1
+else
+	echo "✔ Linter and Stylelint did not find any errors 🐛"
+fi
+
+build_exit_code=1
+echo "build..."
+eval $BUILDER
+build_exit_code=$?
+
+if [ $build_exit_code -ne 0 ]; then
+	echo "❌ Ooopps build failed, check your code pls"
+	exit 1
+else
+	echo "✔ Build Success! Nice JOB!"
+fi
+
+server_build_exit_code=1
+echo "server build..."
+eval $SERVER_BUILDER
+server_build_exit_code=$?
+
+if [ $server_build_exit_code -ne 0 ]; then
+	echo "❌ Ooopps server build failed, check your code pls"
+	exit 1
+else
+	echo "✔ Build Success! Nice JOB!"
+fi
+
+# tester_exit_code=1
+# echo "testing..."
+# eval $TESTER
+# tester_exit_code=$?
+
+# if [ $tester_exit_code -ne 0 ]; then
+# 	echo "❌ Ooopps test failed, check your code pls"
+# 	exit 1
+# else
+# 	echo "✔ Test Success! Nice JOB!"
+# fi
+
+COMMIT_FILES=$(git diff --diff-filter=ACMRT --cached --name-only | grep '\.jsx\|\.js\|\.ts\|\.tsx\?$')
+
+# Prevent ESLint help message if no COMMIT_FILES matched
+if [[ $COMMIT_FILES = "" ]]; then
+	git add .
+	exit 0
+fi
+
+$FIX_EOL lf $COMMIT_FILES
+$FIX_EOL lf '**/*.env'
+
+git add -f $COMMIT_FILES
+
+exit 0

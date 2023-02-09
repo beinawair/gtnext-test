@@ -1,0 +1,21 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": ".",
+		"baseUrl": ".",
+		"outDir": "dist",
+		"sourceMap": false,
+		"module": "CommonJS",
+		"target": "ESNext",
+		"skipDefaultLibCheck": false,
+		"skipLibCheck": false
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*deprecate*",
+		"**/*spec*",
+	]
+}

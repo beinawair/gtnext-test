@@ -1,0 +1,32 @@
+name: Unit Testing
+on: [workflow_call]
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [16.x]
+        typescript-version: [~4.7]
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "${{ matrix.node-version }}"
+          registry-url: "https://registry.npmjs.org"
+      # - name: Install Specific Typescript Version (${{ matrix.typescript-version }})
+      #   run: npm i -D typescript@${{ matrix.typescript-version }}
+      - name: Install Packages 📦
+        run: npm i -g pnpm && pnpm i
+      - name: Build
+        run: pnpm run build
+      - name: Install Server Packages 📦
+        run: cd server && pnpm i
+      - name: Build Server
+        run: cd server && pnpm run build
+      # - name: Test
+      #   run: npm run test "**/*common*"
+      # - name: Test Types
+      #   run: npm run test:types

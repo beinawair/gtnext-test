@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": ".",
+    "paths": {
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@commons/*": [
+        "./commons/*"
+      ],
+      "@commons": [
+        "./commons/index.ts"
+      ],
+      "@routes/*": [
+        "./routes/*"
+      ],
+      "@components/*": [
+        "./components/*"
+      ],
+      "@models/*": [
+        "./models/*"
+      ],
+      "@gateways/*": [
+        "./gateways/*"
+      ],
+      "@configs/*": [
+        "./configs/*"
+      ],
+      "@stores/*": [
+        "./stores/*"
+      ],
+      "@styles/*": [
+        "./styles/*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+    "jsc": {
+        "baseUrl": "",
+        "parser": {
+            "decorators": true,
+            "dynamicImport": true,
+            "syntax": "typescript",
+            "tsx": false
+        },
+        "paths": {
+            "@server/ui/*": [
+                "./src/ui/*"
+            ],
+            "@server/core/*": [
+                "./src/core/*"
+            ],
+            "@server/*": [
+                "./src/*"
+            ]
+        },
+        "target": "es2021",
+        "transform": {
+            "decoratorMetadata": true,
+            "legacyDecorator": true,
+            "useDefineForClassFields": true
+        }
+    },
+    "module": {
+        "ignoreDynamic": true,
+        "importInterop": "swc",
+        "preserveImportMeta": true,
+        "strict": true,
+        "type": "commonjs"
+    }
+}

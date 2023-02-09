@@ -1,0 +1,42 @@
+{
+  "extends": "./tsconfig.path.json",
+  "compilerOptions": {
+    "strict": false,
+    "alwaysStrict": false,
+    "outDir": "dist",
+    "newLine": "LF",
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": [
+      "ES2015",
+      "ES2018",
+      "ESNext",
+      "DOM"
+    ],
+    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "importHelpers": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "pretty": true,
+    "sourceMap": false,
+    "allowJs": true,
+    "noEmit": false,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "exactOptionalPropertyTypes": false,
+    "emitDecoratorMetadata": true,
+    "useUnknownInCatchVariables": false,
+    "removeComments": true,
+    "resolveJsonModule": true,
+  },
+  "exclude": [
+    "node_modules",
+    "**/*deprecate*"
+  ]
+}
