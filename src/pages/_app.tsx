@@ -1,6 +1,5 @@
-import "@styles/globals.css"
-import "@styles/payment.css"
-import "@styles/cardStyle.css"
+import "@styles/global.css"
+import "@styles/main.scss"
 import React from 'react'
 import type { AppProps } from "next/app"
 
@@ -10,7 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 function GateCashFrontendApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      {/* <LoadingHydrationStatic /> */}
       <Component {...pageProps} />
     </>
   )
