@@ -43,5 +43,5 @@
     "next-env.d.ts",
     "src/*.ts",
     "src/*.tsx"
-  ]
+, "globals.d.ts"  ]
 }

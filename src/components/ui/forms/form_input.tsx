@@ -1,21 +1,25 @@
 import React from 'react'
 
-const FormInput = ({
-  extraClass,
-  name,
-  value,
-  id,
-  extraFormClass,
-  readOnly,
-  disabled,
-  label,
-  type,
-  required,
-}) => {
+const FormInput = (props: any) => {
+  const { name,
+    value,
+    id,
+    extraFormClass,
+    readOnly,
+    disabled,
+    label,
+    type,
+    required,
+    extraClass,
+    extraLabelClass,
+    placeholder,
+    aria,
+    testid,
+    change } = props
   return (
     <div className={"form-main form-group" + extraClass || ""}>
       <div className="label-container">
-        <label htmlFor="" className="form-label">
+        <label htmlFor="" className={`form-label ${extraLabelClass}`}>
           {label || ""}
         </label>
         {/* {required ? <span className="form-span">Required</span> : null} */}
@@ -27,10 +31,13 @@ const FormInput = ({
         id={id || "form-id-" + name}
         name={name || ""}
         value={value || ""}
-        onChange={() => ""}
+        onChange={(e) => change(e)}
+        placeholder={placeholder || ""}
         required={required || false}
         disabled={disabled || false}
         readOnly={readOnly || false}
+        aria-label={aria || ""}
+        data-testid={testid || ""}
       />
     </div>
   )
